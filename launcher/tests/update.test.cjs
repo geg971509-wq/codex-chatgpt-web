@@ -228,7 +228,51 @@ test("detached worker replaces an installed Linux AppImage and removes the old v
       Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 25);
     }
     assert.equal(fs.readFileSync(marker, "utf8"), "launched");
-    assert.match(fs.readFileSync(logPath, "utf8"), /installed and relaunched/);
+    assert.match(fs.readFileSync(logPath, "utf8"), /installed; relaunch requested/);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+
+test("worker records asynchronous relaunch failure instead of reporting success and deleting recovery files", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "launcher-worker-failure-"));
+  const jobRoot = path.join(root, "job");
+  const target = path.join(root, "versions", "1.1.4", "Codex Web GPT.AppImage");
+  const wrapper = path.join(root, "bin", "codex-web-gpt");
+  const source = path.join(jobRoot, "new.AppImage");
+  const runnerSource = path.join(jobRoot, "runner");
+  const logPath = path.join(root, "update.log");
+  const jobPath = path.join(jobRoot, "job.json");
+  fs.mkdirSync(jobRoot, { recursive: true });
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.mkdirSync(path.dirname(wrapper), { recursive: true });
+  fs.writeFileSync(target, "old launcher");
+  fs.writeFileSync(wrapper, "old wrapper");
+  fs.writeFileSync(source, "new launcher");
+  fs.writeFileSync(runnerSource, "runner");
+  fs.writeFileSync(jobPath, JSON.stringify({
+    version: "1.2.0", platform: "linux", parentPid: 2_147_483_647,
+    tempRoot: jobRoot, target, wrapper, source, runnerSource, logPath,
+  }));
+  try {
+    // Force a real asynchronous ENOENT in a separate worker process. This also
+    // checks that an EventEmitter error cannot escape the worker's error path.
+    const worker = path.join(__dirname, "..", "electron", "update-worker.cjs");
+    const result = spawnSync(process.execPath, ["-e", `
+      const cp = require("node:child_process");
+      const originalSpawn = cp.spawn;
+      const [worker, job, missing] = process.argv.slice(1);
+      cp.spawn = (_bin, args, options) => originalSpawn(missing, args, options);
+      process.argv = [process.execPath, worker, job];
+      require(worker);
+    `, worker, jobPath, path.join(root, "missing-executable")], { encoding: "utf8", timeout: 10_000 });
+    assert.equal(result.status, 1, result.stderr);
+    const log = fs.readFileSync(logPath, "utf8");
+    assert.match(log, /update failed:[\s\S]*ENOENT/);
+    assert.doesNotMatch(log, /installed and relaunched|installed; relaunch requested/);
+    assert.equal(fs.existsSync(jobRoot), true, "failed updates retain their staged recovery files");
+    assert.equal(fs.existsSync(target), true, "the previous Linux version survives relaunch failure");
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
