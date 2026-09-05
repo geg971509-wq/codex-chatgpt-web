@@ -13,18 +13,21 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
-      - name: Create source snapshot
-        run: git archive --format=tar.gz --output=source-snapshot.tar.gz HEAD
-      - uses: actions/upload-artifact@v4
-        with:
-          name: audit-source
-          path: source-snapshot.tar.gz
-          retention-days: 1
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.4.0
       - run: bun install --frozen-lockfile
       - run: bun install --frozen-lockfile
         working-directory: launcher
+      - name: Prepare isolated test toolchain
+        run: |
+          mkdir -p audit-toolchain
+          cp "$(command -v bun)" audit-toolchain/bun
+          tar --exclude='node_modules/electron/dist' --exclude='launcher/node_modules/electron/dist' -czf audit-toolchain.tar.gz audit-toolchain/bun node_modules launcher/node_modules
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audit-toolchain
+          path: audit-toolchain.tar.gz
+          retention-days: 1
       - name: Verify release baseline
         run: bun run verify
