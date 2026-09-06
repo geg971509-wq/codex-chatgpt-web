@@ -1,3 +1,5 @@
+**独立配布版：** `geg971509-wq/codex-chatgpt-web` が保守・更新し、[miuuyy/codex-chatgpt-web](https://github.com/miuuyy/codex-chatgpt-web) を基にしています。既存版を置き換える方式で、同じデータでの同時実行はサポートしません。既存ユーザーは検証付きインストーラーを使用し、先に[移行と復元](docs/distribution-migration.md)を確認してください。上流の著作権・ライセンスは保持しています。
+
 <h1 align="center">Codex 用 ChatGPT Web</h1>
 
 <p align="center">
@@ -14,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/miuuyy/codex-chatgpt-web/actions/workflows/ci.yml"><img src="https://github.com/miuuyy/codex-chatgpt-web/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/geg971509-wq/codex-chatgpt-web/actions/workflows/ci.yml"><img src="https://github.com/geg971509-wq/codex-chatgpt-web/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT ライセンス"></a>
   <img src="https://img.shields.io/badge/macOS-arm64%20%7C%20x64-black?logo=apple" alt="macOS arm64 および x64">
   <img src="https://img.shields.io/badge/Windows-x64-0078d4?logo=windows11" alt="Windows x64">
@@ -42,11 +44,6 @@ Codex はネイティブのタスク、コンテキストライフサイクル�
 ローカル Responses ブリッジは、選択されたモデルのタスクだけをタスクに紐付いた ChatGPT 一時チャットへルーティングします。
 Full モードでは、次のコンパクション境界まで、MCP が ChatGPT を同じ Codex タスクのツールへ接続します。
 
-> [!TIP]
-> **[ChatGPT Persona Voice](https://github.com/miuuyy/ChatGPT-Persona-Voice)** も開発しています。
-> ChatGPT/Codex の音声をローカル環境でほぼリアルタイムに変換するアプリです。
-> アカウント、ブラウザーセッション、ChatGPT リクエストには一切触れないため、
-> 使用によってアカウントがブロックされるリスクはありません。気に入っていただけたら、ぜひお試しください。
 
 ## 主な特長
 
@@ -77,13 +74,13 @@ Full モードでは、次のコンパクション境界まで、MCP が ChatGPT
 **macOS または Linux**
 
 ```bash
-curl -fsSL https://github.com/miuuyy/codex-chatgpt-web/releases/latest/download/install-launcher.sh | sh
+curl -fsSL https://github.com/geg971509-wq/codex-chatgpt-web/releases/latest/download/install-launcher.sh | sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/miuuyy/codex-chatgpt-web/releases/latest/download/install-launcher.ps1 | iex
+irm https://github.com/geg971509-wq/codex-chatgpt-web/releases/latest/download/install-launcher.ps1 | iex
 ```
 
 アプリ内で次の 3 項目を完了します。
@@ -104,7 +101,7 @@ Free/Go アカウントでは Luna のみが表示され、Pro はサインイ�
 **ソースから実行**
 
 ```bash
-git clone https://github.com/miuuyy/codex-chatgpt-web.git && \
+git clone https://github.com/geg971509-wq/codex-chatgpt-web.git && \
 cd codex-chatgpt-web && \
 bun run app
 ```
@@ -220,16 +217,6 @@ Browser-only チャットは外側のツールを公開しません。Responses 
 - [セキュリティモデル](docs/security-model.md)
 - [トラブルシューティング](TROUBLESHOOTING.md)
 - [コントリビューションガイド](CONTRIBUTING.md)
-
-## Star の履歴
-
-<a href="https://www.star-history.com/?repos=miuuyy%2Fcodex-chatgpt-web&type=date&legend=top-left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&theme=dark&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-    <img alt="Star 履歴チャート" src="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-  </picture>
-</a>
 
 ## 免責事項
 

@@ -2,8 +2,10 @@
   "name": "codex-web-gpt-launcher",
   "version": "5.0.4",
   "private": true,
-  "description": "Desktop control center for Codex ChatGPT Web",
-  "author": "miuuyy",
+  "description": "Independent in-place distribution of Codex ChatGPT Web",
+  "repository": { "type": "git", "url": "git+https://github.com/geg971509-wq/codex-chatgpt-web.git" },
+  "author": "geg971509-wq",
+  "contributors": ["miuuyy (upstream)"],
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
@@ -84,6 +86,7 @@
       "target": ["AppImage"]
     },
     "nsis": {
+      "include": "assets/migration.nsh",
       "guid": "d1a6026a-6210-588e-9a2b-da3936f94e02",
       "oneClick": false,
       "perMachine": false,
