@@ -26,6 +26,10 @@ jobs:
           }
           $source = Get-Content scripts/install-launcher.ps1 -Raw
           [void][scriptblock]::Create($source)
+          $restore = [regex]::Match($source, '(?s)@''\r?\n(param\(\[switch\]\$ConfirmRestore\).*?)\r?\n''@')
+          if (-not $restore.Success) { throw "Migration recovery script was not found" }
+          [void][scriptblock]::Create($restore.Groups[1].Value)
+          ./launcher/tests/windows-migration.test.ps1
           if ($source.Contains("IsPathFullyQualified")) {
             throw "The Windows PowerShell 5.1 installer cannot use the .NET Core-only IsPathFullyQualified API"
           }

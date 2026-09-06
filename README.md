@@ -1,3 +1,5 @@
+**Independent distribution:** maintained and updated by `geg971509-wq/codex-chatgpt-web`, based on [miuuyy/codex-chatgpt-web](https://github.com/miuuyy/codex-chatgpt-web). This is an in-place replacement, not a side-by-side installation. Existing users must use the checked installer and read [migration and recovery](docs/distribution-migration.md) first. Upstream copyright and licenses are preserved.
+
 <h1 align="center">ChatGPT Web for Codex</h1>
 
 <p align="center">
@@ -14,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/miuuyy/codex-chatgpt-web/actions/workflows/ci.yml"><img src="https://github.com/miuuyy/codex-chatgpt-web/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/geg971509-wq/codex-chatgpt-web/actions/workflows/ci.yml"><img src="https://github.com/geg971509-wq/codex-chatgpt-web/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/macOS-arm64%20%7C%20x64-black?logo=apple" alt="macOS arm64 and x64">
   <img src="https://img.shields.io/badge/Windows-x64-0078d4?logo=windows11" alt="Windows x64">
@@ -42,11 +44,6 @@ Codex keeps the native task, context lifecycle, UI, and tool harness. The local 
 routes only the selected model task through a task-bound ChatGPT Temporary Chat; in full mode, MCP
 connects ChatGPT back to the tools of that same Codex task until its next compaction boundary.
 
-> [!TIP]
-> I also built **[ChatGPT Persona Voice](https://github.com/miuuyy/ChatGPT-Persona-Voice)**, a local
-> app that changes the ChatGPT/Codex voice in near real time. It never touches your account, browser
-> session, or ChatGPT requests, so using it carries no account-blocking risk. If you like my work,
-> give it a try.
 
 ## Highlights
 
@@ -78,13 +75,13 @@ preserving the ChatGPT profile and launcher configuration.
 **macOS or Linux**
 
 ```bash
-curl -fsSL https://github.com/miuuyy/codex-chatgpt-web/releases/latest/download/install-launcher.sh | sh
+curl -fsSL https://github.com/geg971509-wq/codex-chatgpt-web/releases/latest/download/install-launcher.sh | sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/miuuyy/codex-chatgpt-web/releases/latest/download/install-launcher.ps1 | iex
+irm https://github.com/geg971509-wq/codex-chatgpt-web/releases/latest/download/install-launcher.ps1 | iex
 ```
 
 Then complete the three checks in the app:
@@ -105,7 +102,7 @@ model API key, installed Chrome/Chromium, system Node/Bun, or project-managed br
 **Run from source**
 
 ```bash
-git clone https://github.com/miuuyy/codex-chatgpt-web.git && \
+git clone https://github.com/geg971509-wq/codex-chatgpt-web.git && \
 cd codex-chatgpt-web && \
 bun run app
 ```
@@ -226,16 +223,6 @@ reused implicitly. See
 - [Security model](docs/security-model.md)
 - [Troubleshooting](TROUBLESHOOTING.md)
 - [Contributing](CONTRIBUTING.md)
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=miuuyy%2Fcodex-chatgpt-web&type=date&legend=top-left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&theme=dark&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-  </picture>
-</a>
 
 ## Disclaimer
 

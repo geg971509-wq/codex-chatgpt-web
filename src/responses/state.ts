@@ -211,8 +211,8 @@ export function rememberResponseState(
   // `force` bypasses only the store:false skip: Codex sends `store:false` on every non-Azure
   // HTTP request (and WS inherits it), yet its WS turns still chain with previous_response_id.
   // The passthrough branch records with force so those chains can be expanded locally; the
-  // store stays in-memory with a 1h TTL, so this is a proxy-internal continuation cache, not
-  // real server-side response storage.
+  // cache has a 1h logical TTL, and eligible entries are persisted locally for restart
+  // recovery. This is proxy-internal continuation storage, not upstream response storage.
   if (request.store === false && !opts?.force) return;
   if (typeof response.id !== "string" || !Array.isArray(response.output)) return;
   if (response.status === "incomplete") {

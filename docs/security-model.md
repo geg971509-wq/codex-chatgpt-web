@@ -104,8 +104,11 @@ outer Codex task owns an exact launcher surface lease and retains its Temporary 
 sequential messages in the same model/effort/compaction epoch; chats are never reused across tasks.
 Closing a running tab destroys its page and terminates that turn. The five-tab limit bounds parallel
 account traffic. Tool calls remain in the same ChatGPT response. The
-bounded local continuation cache is private, expires, and exists only to implement Codex
-`previous_response_id` replay. Full-mode context compaction accepts a checkpoint only through its
+bounded local continuation cache is private and exists only to implement Codex
+`previous_response_id` replay. Eligible entries, including forced `store:false` continuation
+chains, are persisted to `responses-state.json` in the configured runtime home for restart recovery.
+The one-hour TTL limits replay eligibility; it is not a timed secure-deletion guarantee, and the
+snapshot file can remain on disk while the bridge is stopped. Full-mode context compaction accepts a checkpoint only through its
 one-shot MCP control capability in the exact retained source chat. If that chat no longer exists, a
 fresh tool-free Temporary Chat receives the canonical Codex history; the bridge never parses ordinary
 assistant prose as a structured handoff.

@@ -27,8 +27,14 @@ async function waitForParent(pid, timeoutMs = 120_000) {
 }
 
 function launch(bin, args = []) {
-  const child = spawn(bin, args, { detached: true, stdio: "ignore", windowsHide: true });
-  child.unref();
+  return new Promise((resolve, reject) => {
+    const child = spawn(bin, args, { detached: true, stdio: "ignore", windowsHide: true });
+    child.once("error", reject);
+    child.once("spawn", () => {
+      child.unref();
+      resolve();
+    });
+  });
 }
 
 function requireFile(filePath, label) {
@@ -37,7 +43,7 @@ function requireFile(filePath, label) {
   }
 }
 
-function updateMac(job) {
+async function updateMac(job) {
   const sourceExecutable = path.join(job.source, "Contents", "MacOS", "Codex Web GPT");
   requireFile(sourceExecutable, "Staged macOS launcher");
   const next = `${job.target}.updating-${process.pid}`;
@@ -56,17 +62,17 @@ function updateMac(job) {
     fs.renameSync(previous, job.target);
     throw error;
   }
+  await launch("/usr/bin/open", [job.target]);
   fs.rmSync(previous, { recursive: true, force: true });
-  launch("/usr/bin/open", [job.target]);
 }
 
-function updateWindows(job) {
+async function updateWindows(job) {
   requireFile(job.source, "Windows installer");
-  const result = spawnSync(job.source, ["/S"], { encoding: "utf8", timeout: 15 * 60_000, windowsHide: true });
+  const result = spawnSync(job.source, ["/S", "/currentuser", "/MIGRATION_PREPARED"], { encoding: "utf8", timeout: 15 * 60_000, windowsHide: true });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`Windows installer exited with code ${result.status}`);
   requireFile(job.target, "Installed Windows launcher");
-  launch(job.target);
+  await launch(job.target);
 }
 
 function shellQuote(value) {
@@ -82,7 +88,7 @@ function installLinuxFile(source, target) {
   fs.renameSync(next, target);
 }
 
-function updateLinux(job) {
+async function updateLinux(job) {
   requireFile(job.source, "Linux AppImage");
   requireFile(job.runnerSource, "Linux AppImage runner");
   const wrapper = job.wrapper && path.isAbsolute(job.wrapper) ? job.wrapper : null;
@@ -102,22 +108,24 @@ function updateLinux(job) {
     "",
   ].join("\n"), { mode: 0o755 });
   fs.renameSync(wrapperNext, wrapper);
+  await launch(wrapper);
   if (path.dirname(job.target) !== path.dirname(nextTarget)
     && path.dirname(path.dirname(job.target)) === versionsRoot) {
     fs.rmSync(path.dirname(job.target), { recursive: true, force: true });
   }
-  launch(wrapper);
 }
 
-function relaunchExisting(job) {
+async function relaunchExisting(job) {
   try {
-    if (job.platform === "darwin" && fs.existsSync(job.target)) launch("/usr/bin/open", [job.target]);
-    else if (job.platform === "win32" && fs.existsSync(job.target)) launch(job.target);
+    if (job.platform === "darwin" && fs.existsSync(job.target)) await launch("/usr/bin/open", [job.target]);
+    else if (job.platform === "win32" && fs.existsSync(job.target)) await launch(job.target);
     else if (job.platform === "linux") {
       const target = job.wrapper && fs.existsSync(job.wrapper) ? job.wrapper : job.target;
-      if (fs.existsSync(target)) launch(target);
+      if (fs.existsSync(target)) await launch(target);
     }
-  } catch {}
+  } catch (error) {
+    appendLog(job, `relaunch failed: ${error instanceof Error ? error.message : String(error)}`);
+  }
 }
 
 async function main() {
@@ -128,15 +136,15 @@ async function main() {
   await waitForParent(job.parentPid);
   appendLog(job, `installing v${job.version} on ${job.platform}`);
   try {
-    if (job.platform === "darwin") updateMac(job);
-    else if (job.platform === "win32") updateWindows(job);
-    else if (job.platform === "linux") updateLinux(job);
+    if (job.platform === "darwin") await updateMac(job);
+    else if (job.platform === "win32") await updateWindows(job);
+    else if (job.platform === "linux") await updateLinux(job);
     else throw new Error(`Unsupported update platform: ${job.platform}`);
-    appendLog(job, `v${job.version} installed and relaunched`);
+    appendLog(job, `v${job.version} installed; relaunch requested`);
     try { fs.rmSync(job.tempRoot, { recursive: true, force: true }); } catch {}
   } catch (error) {
     appendLog(job, `update failed: ${error instanceof Error ? error.stack || error.message : String(error)}`);
-    relaunchExisting(job);
+    await relaunchExisting(job);
     throw error;
   }
 }

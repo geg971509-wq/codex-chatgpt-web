@@ -1,11 +1,22 @@
 #!/bin/sh
 set -eu
 
-REPOSITORY="${CODEX_CHATGPT_WEB_REPOSITORY:-miuuyy/codex-chatgpt-web}"
+REPOSITORY="${CODEX_CHATGPT_WEB_REPOSITORY:-geg971509-wq/codex-chatgpt-web}"
 VERSION="${CODEX_CHATGPT_WEB_VERSION:-5.0.4}"
 BIN_DIR="${CODEX_CHATGPT_WEB_BIN_DIR:-$HOME/.local/bin}"
 LIB_DIR="${CODEX_CHATGPT_WEB_LIB_DIR:-$HOME/.local/lib/codex-chatgpt-web}"
 DOC_DIR="${CODEX_CHATGPT_WEB_DOC_DIR:-$HOME/.local/share/doc/codex-chatgpt-web}"
+
+# Terminal installation has no cross-publisher backup/receipt transaction. Do not
+# silently use it as an escape hatch around the desktop migration installer.
+CORE_HOME="${CODEX_CHATGPT_WEB_HOME:-$HOME/.codex-chatgpt-web}"
+if [ "$REPOSITORY" != "geg971509-wq/codex-chatgpt-web" ]; then
+  echo "This installer only trusts geg971509-wq/codex-chatgpt-web" >&2; exit 1
+fi
+if [ -f "$CORE_HOME/config.json" ] && [ "$(cat "$CORE_HOME/distribution-source" 2>/dev/null || true)" != "$REPOSITORY" ]; then
+  echo "Migrate the existing installation with install-launcher.sh first; terminal-only publisher takeover is disabled" >&2
+  exit 1
+fi
 
 if [ "$(uname -s)" != "Darwin" ]; then
   echo "The terminal-only installer supports macOS only; use the desktop launcher on Windows or Linux" >&2

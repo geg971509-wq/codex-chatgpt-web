@@ -37,6 +37,9 @@ const builderArgs = [
 ];
 if (target === "--mac" && !env.CSC_LINK && !env.CSC_NAME) {
   builderArgs.push("--config.mac.identity=-");
+  env.CSC_FOR_PULL_REQUEST = "true";
+  // The explicit ad-hoc identity and disabled discovery keep PR builds keyless.
+  // Do not set this flag in the certificate-backed branch above.
 }
 
 const staging = fs.mkdtempSync(path.join(os.tmpdir(), "codex-web-gpt-package-"));

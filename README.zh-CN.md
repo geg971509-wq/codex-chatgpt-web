@@ -1,3 +1,5 @@
+**独立发行版：** 由 `geg971509-wq/codex-chatgpt-web` 维护和提供更新，基于 [miuuyy/codex-chatgpt-web](https://github.com/miuuyy/codex-chatgpt-web)。采用原位接替，不支持与上游版共用数据同时运行。已有用户须通过带校验的安装脚本迁移，先阅读[迁移与恢复](docs/distribution-migration.md)；保留上游版权及许可证。
+
 <h1 align="center">ChatGPT Web for Codex</h1>
 
 <p align="center">
@@ -14,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/miuuyy/codex-chatgpt-web/actions/workflows/ci.yml"><img src="https://github.com/miuuyy/codex-chatgpt-web/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/geg971509-wq/codex-chatgpt-web/actions/workflows/ci.yml"><img src="https://github.com/geg971509-wq/codex-chatgpt-web/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/macOS-arm64%20%7C%20x64-black?logo=apple" alt="macOS arm64 and x64">
   <img src="https://img.shields.io/badge/Windows-x64-0078d4?logo=windows11" alt="Windows x64">
@@ -41,10 +43,6 @@ Codex 会保留原生任务、上下文生命周期、界面和工具 harness。
 所选模型的任务转发到与该任务绑定的 ChatGPT 临时聊天；在完整模式下，MCP 会把 ChatGPT 连接回
 同一个 Codex 任务的工具，直到下一次上下文压缩边界。
 
-> [!TIP]
-> 我还开发了 **[ChatGPT Persona Voice](https://github.com/miuuyy/ChatGPT-Persona-Voice)**：一款
-> 能够近实时改变 ChatGPT/Codex 声音的本地应用。它不会接触你的账户、浏览器会话或 ChatGPT
-> 请求，因此不会带来账户封禁风险。如果你喜欢我的作品，欢迎试用。
 
 ## 亮点
 
@@ -72,13 +70,13 @@ Codex 会保留原生任务、上下文生命周期、界面和工具 harness。
 **macOS 或 Linux**
 
 ```bash
-curl -fsSL https://github.com/miuuyy/codex-chatgpt-web/releases/latest/download/install-launcher.sh | sh
+curl -fsSL https://github.com/geg971509-wq/codex-chatgpt-web/releases/latest/download/install-launcher.sh | sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/miuuyy/codex-chatgpt-web/releases/latest/download/install-launcher.ps1 | iex
+irm https://github.com/geg971509-wq/codex-chatgpt-web/releases/latest/download/install-launcher.ps1 | iex
 ```
 
 然后在应用中完成三项检查：
@@ -98,7 +96,7 @@ Chrome/Chromium、系统级 Node/Bun，也不会由本项目另行下载浏览�
 **从源码运行**
 
 ```bash
-git clone https://github.com/miuuyy/codex-chatgpt-web.git && \
+git clone https://github.com/geg971509-wq/codex-chatgpt-web.git && \
 cd codex-chatgpt-web && \
 bun run app
 ```
@@ -207,16 +205,6 @@ DEV tunnel 就绪，具名聊天按需连接 broker。正式凭据和 `Codex Nat
 - [安全模型](docs/security-model.md)
 - [故障排除](TROUBLESHOOTING.md)
 - [贡献指南](CONTRIBUTING.md)
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=miuuyy%2Fcodex-chatgpt-web&type=date&legend=top-left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&theme=dark&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=miuuyy/codex-chatgpt-web&type=date&legend=top-left&sealed_token=hBVvg_eOjfMFDrfyeo5FPQkIwcvBEmXc6F7ZoOKnfFE4KPCs67o34w4XwVuM-bHGnKR-SKCAN_TSTWrzuqSBNU-RjNZCLT4f-xNs9qcDhciQtemxHKuuFj0N5YNqZIihdaQfakrh2ANhOrvP0K2LmLXX2zbsYyVaYZknyTnlYeIS_mOGvMcO32ZmPCHK">
-  </picture>
-</a>
 
 ## 免责声明
 
