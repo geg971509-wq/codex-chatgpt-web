@@ -140,7 +140,8 @@ foreach ($Record in $Hashes) {
 }
 $Saved = Join-Path $Root ('before-restore-' + [guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $Saved | Out-Null
-$Items = @(Get-Content -LiteralPath (Join-Path $Root 'files.json') -Raw | ConvertFrom-Json)
+# Windows PowerShell 5.1 emits a JSON array as one pipeline object; do not wrap it again.
+$Items = Get-Content -LiteralPath (Join-Path $Root 'files.json') -Raw | ConvertFrom-Json
 $Core = ($Items | Where-Object { $_.label -eq 'core-home' }).target
 foreach ($Name in @('launcher-browser.json', 'launcher-supervisor.json')) {
   $StatePath = Join-Path $Core "runtime\$Name"
