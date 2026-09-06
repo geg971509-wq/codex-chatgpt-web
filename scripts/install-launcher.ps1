@@ -41,8 +41,10 @@ function Assert-MigrationStopped {
   }
   foreach ($Name in @('launcher-browser.json', 'launcher-supervisor.json')) {
     $StateFile = Join-Path $CoreHome "runtime\$Name"
-    if (-not (Test-Path -LiteralPath $StateFile)) { continue }
-    $State = Get-Content -LiteralPath $StateFile -Raw | ConvertFrom-Json
+    try { $StateText = Get-Content -LiteralPath $StateFile -Raw -ErrorAction Stop }
+    catch [System.Management.Automation.ItemNotFoundException] { continue }
+    # Missing optional metadata is normal; unreadable or corrupt metadata is not.
+    $State = $StateText | ConvertFrom-Json
     foreach ($Field in @('pid', 'ownerPid', 'daemonPid', 'tunnelPid')) {
       $OwnerPid = $State.$Field
       if ($OwnerPid -and (Get-Process -Id $OwnerPid -ErrorAction SilentlyContinue)) {
@@ -142,11 +144,12 @@ $Items = @(Get-Content -LiteralPath (Join-Path $Root 'files.json') -Raw | Conver
 $Core = ($Items | Where-Object { $_.label -eq 'core-home' }).target
 foreach ($Name in @('launcher-browser.json', 'launcher-supervisor.json')) {
   $StatePath = Join-Path $Core "runtime\$Name"
-  if (Test-Path -LiteralPath $StatePath) {
-    $State = Get-Content -LiteralPath $StatePath -Raw | ConvertFrom-Json
-    foreach ($Field in @('pid', 'ownerPid', 'daemonPid', 'tunnelPid')) {
-      if ($State.$Field -and (Get-Process -Id $State.$Field -ErrorAction SilentlyContinue)) { throw 'Stop the recorded runtime before recovery' }
-    }
+  try { $StateText = Get-Content -LiteralPath $StatePath -Raw -ErrorAction Stop }
+  catch [System.Management.Automation.ItemNotFoundException] { continue }
+  # Keep parsing outside the missing-file handler: malformed ownership must fail.
+  $State = $StateText | ConvertFrom-Json
+  foreach ($Field in @('pid', 'ownerPid', 'daemonPid', 'tunnelPid')) {
+    if ($State.$Field -and (Get-Process -Id $State.$Field -ErrorAction SilentlyContinue)) { throw 'Stop the recorded runtime before recovery' }
   }
 }
 foreach ($Item in $Items) {

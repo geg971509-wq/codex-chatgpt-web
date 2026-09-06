@@ -43,6 +43,22 @@ try {
   # Refuse registry changes even if this test is accidentally run on a workstation
   # with a real installation. File restoration remains real filesystem I/O.
   function reg.exe { $global:LASTEXITCODE = 0 }
+  # Both preflight and recovery distinguish absent metadata from corrupt/live ownership.
+  $Runtime = Join-Path $CoreHome 'runtime'
+  $Descriptor = Join-Path $Runtime 'launcher-browser.json'
+  New-Item -ItemType Directory -Path $Runtime | Out-Null
+  foreach ($Metadata in @('{not-json', ('{"pid":' + $PID + '}'))) {
+    [IO.File]::WriteAllText($Descriptor, $Metadata)
+    $Rejected = $false
+    try { Assert-MigrationStopped } catch { $Rejected = $true }
+    Assert-Equal $Rejected $true
+    $Rejected = $false
+    try { & (Join-Path $Backup 'restore.ps1') -ConfirmRestore } catch { $Rejected = $true }
+    Assert-Equal $Rejected $true
+    Assert-Equal (Get-Content -LiteralPath (Join-Path $CodexHome 'config.toml') -Raw) 'new-route'
+  }
+  Remove-Item -LiteralPath $Descriptor
+  Assert-MigrationStopped
   & (Join-Path $Backup 'restore.ps1') -ConfirmRestore
   Assert-Equal (Get-Content -LiteralPath (Join-Path $CodexHome 'config.toml') -Raw) 'old-route'
   Assert-Equal (Test-Path -LiteralPath $SourceMarker) $false
